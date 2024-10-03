@@ -6,28 +6,49 @@ const userModel = require("../models/userModel");
 module.exports = {
   async register(req, res) {
     const { username, password } = req.body;
-    const user = await userModel.createUser(username, password);
-    res.json({ message: "User created", user });
+
+    try {
+      const user = await userModel.createUser(username, password);
+      res.status(200).json(user);
+    } catch (error) {
+      if (error.message === "Registration failed") {
+        res.status(400).json({ message: "Registration failed" });
+      } else {
+        res.status(500).json({ message: error.message });
+      }
+    }
   },
 
   async login(req, res) {
     const { username, password } = req.body;
-    const user = await userModel.findUserByUsername(username);
 
-    if (!user) return res.status(400).json({ error: "User not found" });
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ error: "Username and password are required" });
+    }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid)
-      return res.status(400).json({ error: "Invalid password" });
+    try {
+      const user = await userModel.findUserByUsername(username);
 
-    const token = jwt.sign(
-      { id: user.id, username: user.username },
-      jwtSecret,
-      {
-        expiresIn: jwtExpiresIn,
+      if (!user) {
+        return res.status(400).json({ error: "Check your credentials" });
       }
-    );
 
-    res.json({ message: "Login successful", token });
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return res.status(400).json({ error: "Invalid password" });
+      }
+
+      const token = jwt.sign(
+        { id: user.id, username: user.username },
+        jwtSecret,
+        { expiresIn: jwtExpiresIn }
+      );
+
+      res.json({ message: "Login successful", token });
+    } catch (error) {
+      res.status(500).json({ error: "An error occurred while logging in" });
+    }
   },
 };

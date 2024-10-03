@@ -1,26 +1,42 @@
 const bcrypt = require("bcryptjs");
-
-const users = [];
+const db = require("../config/db");
 
 module.exports = {
   async createUser(username, password) {
     if (!username || !password) {
-      return res
-        .status(400)
-        .json({ message: "Username and password are required" });
+      throw new Error("Username and password are required");
     }
 
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
-      const user = { id: Date.now(), username, password: hashedPassword };
-      users.push(user);
-      return user;
+
+      const existingUser = await db.query(
+        "SELECT * FROM users WHERE username = $1",
+        [username]
+      );
+
+      if (existingUser.rows.length > 0) {
+        throw new Error("Registration failed");
+      }
+
+      const result = await db.query(
+        "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *",
+        [username, hashedPassword]
+      );
+      return result.rows[0];
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      throw error;
     }
   },
 
   async findUserByUsername(username) {
-    return users.find((user) => user.username === username);
+    try {
+      const result = await db.query("SELECT * FROM users WHERE username = $1", [
+        username,
+      ]);
+      return result.rows[0];
+    } catch (error) {
+      throw new Error("Error while fetching user");
+    }
   },
 };
