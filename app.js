@@ -1,7 +1,14 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const vulnerabilityRoutes = require("./routes/vulnerabilityRoutes");
+
+var corsOptions = {
+  origin: "http://localhost:3000",
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 

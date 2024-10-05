@@ -40,13 +40,13 @@ module.exports = {
         return res.status(400).json({ error: "Invalid password" });
       }
 
-      const token = jwt.sign(
+      const access_token = jwt.sign(
         { id: user.id, username: user.username },
         jwtSecret,
         { expiresIn: jwtExpiresIn }
       );
 
-      res.json({ message: "Login successful", token });
+      res.json({ message: "Login successful", access_token });
     } catch (error) {
       res.status(500).json({ error: "An error occurred while logging in" });
     }
