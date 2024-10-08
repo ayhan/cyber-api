@@ -48,7 +48,7 @@ module.exports = {
 
       res.json({ message: "Login successful", access_token });
     } catch (error) {
-      res.status(500).json({ error });
+      res.status(500).json({ error: "An error occurred while logging in" });
     }
   },
 };

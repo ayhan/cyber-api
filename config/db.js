@@ -1,17 +1,8 @@
 const { Pool } = require("pg");
-require("dotenv").config();
-
-// PostgreSQL database information
-// const pool = new Pool({
-//   user: "ayhan",
-//   host: "localhost",
-//   database: "postgres",
-//   password: "pass",
-//   port: 5432,
-// });
+const { postgreUrl } = require("../config/config");
 
 const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL,
+  connectionString: postgreUrl,
 });
 
 // Export database connection
