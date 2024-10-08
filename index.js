@@ -5,7 +5,7 @@ const authRoutes = require("./routes/authRoutes");
 const vulnerabilityRoutes = require("./routes/vulnerabilityRoutes");
 
 var corsOptions = {
-  origin: ["http://localhost:3000", "https://cyber-web-two.vercel.app/"],
+  origin: ["http://localhost:3000", "https://cyber-web-two.vercel.app"],
 };
 
 app.use(cors(corsOptions));
