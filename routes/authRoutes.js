@@ -8,7 +8,7 @@ router.post("/login", authController.login);
 
 // Authenticated routes
 router.get("/profile", authMiddleware, (req, res) => {
-  res.json({ user: req.user });
+  res.json(req.user);
 });
 
 module.exports = router;
