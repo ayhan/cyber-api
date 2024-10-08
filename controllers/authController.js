@@ -14,7 +14,7 @@ module.exports = {
       if (error.message === "Registration failed") {
         res.status(400).json({ error: "Registration failed" });
       } else {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ error: error.message });
       }
     }
   },
