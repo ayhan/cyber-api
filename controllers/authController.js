@@ -12,7 +12,7 @@ module.exports = {
       res.status(200).json(user);
     } catch (error) {
       if (error.message === "Registration failed") {
-        res.status(400).json({ message: "Registration failed" });
+        res.status(400).json({ error: "Registration failed" });
       } else {
         res.status(500).json({ message: error.message });
       }
